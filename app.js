@@ -13,10 +13,10 @@ const app = Vue.createApp({
   },
   computed: {
     monsterBarStyles() {
-      return { width: `${this.monsterHealth}%` };
+      return { width: this.monsterHealth < 0 ? '0%' : `${this.monsterHealth}%` };
     },
     playerBarStyles() {
-      return { width: `${this.playerHealth}%` };
+      return { width: this.playerHealth < 0 ? '0%' : `${this.playerHealth}%` };
     },
     isFreeRound() {
       return this.currentRound % 3 === 0;
@@ -39,6 +39,12 @@ const app = Vue.createApp({
     }
   },
   methods: {
+    startNewGame() {
+      this.monsterHealth = 100;
+      this.playerHealth = 100;
+      this.currentRound = 0;
+      this.winner = null;
+    },
     attackMonster() {
       const attackValue = getRandomValue(5, 12);
       this.monsterHealth -= attackValue;
@@ -64,6 +70,9 @@ const app = Vue.createApp({
       }
       this.currentRound += 1;
       this.attackPlayer();
+    },
+    surrender() {
+      this.winner = 'monster';
     }
   }
 });
